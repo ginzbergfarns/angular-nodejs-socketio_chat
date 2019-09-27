@@ -1,0 +1,13 @@
+.layout {
+  display: flex;
+  height: 100vh;
+}
+
+.sidebar {
+  flex-basis: 15%;
+  min-width: 20rem;
+}
+
+.content-wrapper {
+  flex-basis: 85%;
+}

@@ -1,0 +1,41 @@
+.chat-interaction {
+  width: 100%;
+
+  &__field-wrapper {
+    position: relative;
+    padding: 10px;
+  }
+
+  &__input {
+    width: 100%;
+    height: 60px;
+    border-radius: 30px;
+    appearance: none;
+    box-shadow: none;
+    transition: 0.4s;
+    border: 2px solid lightblue;
+    padding: 10px 20px;
+    outline: none;
+    color: black;
+    font-size: 16px;
+
+    &:hover,
+    &:focus {
+      border-color: cornflowerblue;
+    }
+  }
+
+  &__button {
+    border-radius: 50%;
+    border: 1px solid lightblue;
+    background-color: cornflowerblue;
+    position: absolute;
+    top: 50%;
+    right: 25px;
+    width: 40px;
+    height: 40px;
+    transform: translateY(-50%);
+    color: white;
+    cursor: pointer;
+  }
+}
