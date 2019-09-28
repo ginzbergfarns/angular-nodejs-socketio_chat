@@ -1,7 +1,8 @@
 import { Component, OnInit } from '@angular/core';
-import {UserService} from "../../services/user.service";
-import {NewUserDialogComponent} from "../new-user-dialog/new-user-dialog.component";
-import {MatDialog} from "@angular/material";
+import {UserService} from '../../services/user.service';
+import {NewUserDialogComponent} from '../new-user-dialog/new-user-dialog.component';
+import {MatDialog} from '@angular/material';
+import {RoomService} from '../../services/room.service';
 
 @Component({
   selector: 'app-user-list',
@@ -27,10 +28,11 @@ export class UserListComponent implements OnInit {
       this.createUser();
       this.dialogRef.afterClosed().subscribe(name => {
         this.userS.createUser(name);
-        this.getUserList();
+        user = this.userS.getCurrentUser();
+        this.fetchUserList();
       });
     } else {
-      this.getUserList();
+      this.fetchUserList();
     }
   }
 
@@ -43,21 +45,17 @@ export class UserListComponent implements OnInit {
 
   private initSubscription() {
     this.userS.userCreateObservable.subscribe((data) => {
-      const currentUser = this.userS.getCurrentUser();
-      if (data.id !== currentUser.id) {
         this.addNewUser(data);
-      }
-    })
+    });
   }
 
-  private getUserList() {
-    this.userS.getUserList().subscribe((data: any[]) => {
+  private fetchUserList() {
+    this.userS.fetchUserList().subscribe((data: any[]) => {
       this.userList = data;
     });
   }
 
   private addNewUser(data) {
-    console.log(data);
     this.userList.push(data);
   }
 }

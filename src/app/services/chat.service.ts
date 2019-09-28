@@ -1,40 +1,47 @@
-import {EventEmitter, Injectable} from '@angular/core';
-import {Socket} from "ngx-socket-io";
+import {Injectable} from '@angular/core';
+import {Socket} from 'ngx-socket-io';
+import {RoomService} from './room.service';
+import {filter, map} from 'rxjs/operators';
+import {UserService} from './user.service';
 
 @Injectable({
   providedIn: 'root'
 })
 export class ChatService {
 
-  constructor(private socket: Socket) {
-    this.initEvents();
+  constructor(private socket: Socket,
+              private roomS: RoomService,
+              private userS: UserService) {
+    this.messageHandler();
   }
 
-  currentRoom;
+  // bindings
+  public $messageHandler;
+  private $socketMessageHandler = this.socket.fromEvent('message');
 
-  //bindings
-  public $disconnectAllRoomEvent = new EventEmitter();
-  public $messageHandler = this.socket.fromEvent('message');
 
-  initEvents() {
-    console.log('init events');
-    this.socket.fromEvent('connection').subscribe((data) => {
-      console.log('connection');
-    })
+  public sendMessage(message) {
+    const currentUser = this.userS.getCurrentUser();
+    const msg = {
+      text: message,
+      roomId: this.roomS.currentRoomId,
+      fromRoomId: currentUser.room.id,
+    };
+    this.socket.emit('message', msg);
   }
 
-  connectToRoom(roomId, targetRoom: boolean = true) {
-    if (targetRoom) {
-      this.currentRoom = roomId;
-    }
-    this.socket.emit('roomJoin', roomId)
-  }
-
-  disconnectAllRoom() {
-    this.$disconnectAllRoomEvent.next();
-  }
-
-  sendMessage(message) {
-    this.socket.emit('message', message, this.currentRoom);
+  public messageHandler() {
+    console.log('message handler');
+    this.$messageHandler = this.$socketMessageHandler.pipe(
+      filter((message: any) => {
+        console.log('new message');
+        return message.roomId === this.roomS.currentRoomId || message.fromRoomId === this.roomS.currentRoomId;
+      }),
+      map((message: any) => {
+        const userList = this.userS.getUserList();
+        message.user = userList.filter(user => user.id === message.userId);
+        return message;
+      })
+    );
   }
 }

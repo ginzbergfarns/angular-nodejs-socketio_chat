@@ -1,5 +1,5 @@
 import {Component, Input, OnInit} from '@angular/core';
-import {ChatService} from "../../services/chat.service";
+import {RoomService} from '../../services/room.service';
 
 @Component({
   selector: 'app-user-card',
@@ -11,21 +11,21 @@ export class UserCardComponent implements OnInit {
   connected = false;
   @Input() data;
 
-  constructor(private chatS: ChatService) { }
+  constructor(private roomS: RoomService) { }
 
   ngOnInit() {
     this.initSubscription();
   }
 
   private initSubscription() {
-    this.chatS.$disconnectAllRoomEvent.subscribe(() => {
+    this.roomS.$disconnectAllRoomEvent.subscribe(() => {
       this.connected = false;
-    })
+    });
   }
 
   connectToRoom() {
-    this.chatS.disconnectAllRoom();
-    this.chatS.connectToRoom(this.data.room.id);
+    this.roomS.disconnectAllRoom();
+    this.roomS.connectToRoom(this.data.room.id, true);
     this.connected = true;
   }
 }

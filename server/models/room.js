@@ -8,7 +8,7 @@ class Room {
     }
 
     addMessage(msg) {
-        this.history.add(msg);
+        this.history.push(msg);
     }
 }
 

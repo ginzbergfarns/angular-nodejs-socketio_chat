@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
-import {ChatService} from "../../services/chat.service";
+import {ChatService} from '../../services/chat.service';
+import {RoomService} from '../../services/room.service';
 
 @Component({
   selector: 'app-chat-window',
@@ -9,7 +10,8 @@ import {ChatService} from "../../services/chat.service";
 export class ChatWindowComponent implements OnInit {
   msgList = [];
 
-  constructor(private chatS: ChatService) { }
+  constructor(private chatS: ChatService,
+              private roomS: RoomService) { }
 
   ngOnInit() {
     this.initSubscription();
@@ -19,10 +21,13 @@ export class ChatWindowComponent implements OnInit {
     this.chatS.$messageHandler.subscribe((msg) => {
       this.addMessage(msg);
     });
+
+    this.roomS.$changeRoomEvent.subscribe(() => {
+      this.msgList = [];
+    });
   }
 
   public addMessage(msg) {
-    console.log(msg);
     this.msgList.push(msg);
   }
 }

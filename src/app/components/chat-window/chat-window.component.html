@@ -1,7 +1,7 @@
 <div class="chat-window">
   <div class="chat-window__message-list">
     <div class="chat-window__wrapper">
-      <app-chat-message *ngFor="let msg of msgList" [text]="msg"></app-chat-message>
+      <app-chat-message *ngFor="let msg of msgList" [data]="msg"></app-chat-message>
     </div>
   </div>
   <div class="chat-window__interactions-wrapper">
